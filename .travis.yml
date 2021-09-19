@@ -5,14 +5,14 @@ services:
 before_install:
     - docker build -t pranzal/react-test -f ./client/Dockerfile.dev ./client
 script:
-    - docker run  pranzal/react-test npm test -- coverage
+    - docker run  -e CI=true pranzal/react-test npm test
 after_success:
     - docker build -t pranzal/multi-client ./client
     - docker build -t pranzal/multi-nginx ./nginx
     - docker build -t pranzal/multi-worker ./worker
     - docker build -t pranzal/multi-server ./server
     
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password word-stdin
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
     - docker push pranzal/multi-client
     - docker push pranzal/multi-nginx
